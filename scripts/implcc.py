@@ -9,18 +9,17 @@ import re
 def implcc(head):
         src=re.sub('.h$','.cpp',head)
         os.system('rm -f %s' % src)
-        os.system('rm -f temp.txt')
         os.system('touch %s' % src)
         os.system('echo "#include <%s>" > %s' % (head,src))
         os.system('ctags -f tags --fields=+afmikKlnsStz --sort=no %s' % head)
-        os.system('grep kind:function tags>funclist.txt' )
-        os.system('grep -E -o "namespace\:([[:print:]]+)" tags |sort -u -r|sed -e s#namespace:##g > spa.txt')
+        os.system('grep kind:function tags>funclist.tmp' )
+        os.system('grep -E -o "namespace\:([[:print:]]+)" tags |sort -u -r|sed -e s#namespace:##g > spa.tmp')
         spas = []
-        with open('spa.txt') as f:
+        with open('spa.tmp') as f:
                 for i in f:
                         line = i.replace('\r','').replace('\n','')
                         spas.append(line)
-        with open('funclist.txt') as f:
+        with open('funclist.tmp') as f:
                 for i in f:
                         retv=obj=spa=func=para=''
                         line=i.replace('\r','').replace('\n','')

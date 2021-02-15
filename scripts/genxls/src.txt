@@ -1,0 +1,39 @@
+
+/*
+@auth:hahahaahaha
+@project:cover
+@base:base
+@subject:today
+*/
+
+
+
+/*
+@begin
+@product:book
+@price:10
+@price:20
+@price:30
+@pdate:2020-1-1
+@comment:<not parse>
+*/
+
+/*
+@begin
+@product:note
+@price:1
+@price:2
+@price:3
+@pdate:2020-1-1
+@comment:<not parse>
+*/
+
+/*
+@begin
+@product:pen
+@price:100asfdafdasfdafafdasafsafsadfafdsafasdfafsdafaasdfasfdsafgweaawg
+@price:200100asfdafdasfdafafdasafsafsadfafdsafasdfafsdafaasdfasfdsafgweaawg
+@price:300200100asfdafdasfdafafdasafsafsadfafdsafasdfafsdafaasdfasfdsafgweaawg
+@pdate:2020-3-3
+@comment:<not parse>
+*/

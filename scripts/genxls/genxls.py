@@ -4,6 +4,7 @@ import openpyxl
 import re
 import os
 import sys
+import chardet
 from openpyxl.styles import Border,Side
 from openpyxl.styles import Alignment
 import shutil
@@ -70,7 +71,7 @@ def drawborder(resexcel, skipsheet):
             print('skip sheet %s' % i)
             next
         else:
-            print('draw sheet %s border' % i)
+            print('draw sheet %s border'% i)
             border = Border(left=Side(border_style='thin',color='000000'),
                 right=Side(border_style='thin',color='000000'),
                 top=Side(border_style='thin',color='000000'),
@@ -153,8 +154,14 @@ if __name__=="__main__":
         print(ruletab)
         closeexcel(ruleexcel)
      if(resexcel != None):
-        with open(fsrc) as f:
+        coding='utf-8'
+        with open(fsrc,mode='rb') as f:
+            cont = f.read()
+            coding=chardet.detect(cont)['encoding']
+            print('%s coding %s'%(fsrc,coding))
+        with open(fsrc, mode='r',encoding=coding) as f:
             print('handle src %s' % fsrc)
             extract(f,ruletab,resexcel)
             saveexcel(resexcel,fdst)
             closeexcel(resexcel)
+

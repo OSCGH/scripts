@@ -12,7 +12,7 @@ import shutil
 #output:res.xlsx
 #***note: escape chars may not be available***
 #rule
-#tag->ttype->sheet->col->row
+#tag->ttype->sheet->col->row->opt
 class curexcelpos:
     cursheet=''
     cover = 'cover'
@@ -51,13 +51,8 @@ def writetab(excel,sheet,tab):
     saveexcel(excel)
     return ret
 def writecell(data,dstexcel,sheet,col,row):
-    src = readcell(dstexcel,sheet,col,row)
-    if src == '':
-        ndata = data
-    else:
-        ndata='%s\n%s' % (src,data)
-    dstexcel[sheet]['%s%s'%(col,row)].value = ndata
-    print('%s %s%s=%s' % (sheet,col,row,ndata))
+    dstexcel[sheet]['%s%s'%(col,row)].value = data
+    print('%s %s%s=%s' % (sheet,col,row,data))
     return True
 def readcell(dstexcel,sheet,col,row):
     celltype = dstexcel[sheet]['%s%s'%(col,row)].data_type
@@ -98,6 +93,7 @@ def extract(src,ruletab,dstexcel):
                     data = line.replace(j[0],'')
                     print('data %s' % data)
                     ttype=j[1]
+                    opt=j[5]
                     if ttype == 'write':
                         sheet=j[2]
                         if(sheet in '_'):
@@ -111,6 +107,21 @@ def extract(src,ruletab,dstexcel):
                         if(row in '_'):
                             row = pos.sheetpos[pos.cursheet]['currow']
                         pos.sheetpos[pos.cursheet]['currow']=row
+                        if(opt=='append'):
+                            src = readcell(dstexcel,sheet,col,row)
+                            if src != '':
+                                data='%s\n%s' % (src,data)
+                        elif(opt=='replace'):
+                            pass
+                        elif(opt=='uniqset'):
+                            src = readcell(dstexcel,sheet,col,row)
+                            if (not data  in src):
+                                data='%s\n%s' % (src,data)
+                        elif(opt=='mkid'):
+                            data = data.replace(' ','')
+                            data = data.replace('(','')
+                            data = data.replace(')','')
+                            data = data.replace(',','.')
                         writecell(data,dstexcel,sheet,col,row)
                     elif ttype == 'newrow':
                         row=pos.sheetpos[pos.cursheet]['currow']
@@ -146,7 +157,8 @@ if __name__=="__main__":
      frule='rule.xlsx'
      ftmp='template.xlsx'
      fdst='res.xlsx'
-     shutil.copy(ftmp,fdst)
+     if(not os.path.isfile(fdst)):
+        shutil.copy(ftmp,fdst)
      ruleexcel=openexcel(frule)
      resexcel=openexcel(fdst,False)
      if(ruleexcel != None):
